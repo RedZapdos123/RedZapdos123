@@ -1,16 +1,18 @@
-# Hi there, I'm @RedZapdos123 👋
+# Hi there, I'm @RedZapdos123
+
+![Profile Views](https://komarev.com/ghpvc/?username=RedZapdos123&color=purple&style=flat-square&label=Profile+Views)
 
 Welcome to my GitHub profile! This page is automatically updated with my latest FOSS contributions and metrics.
 
-## 📈 Contribution Statistics
+## Contribution Statistics
 
 <table align="center" style="border: none; border-collapse: collapse; width: 100%; max-width: 800px; margin: 20px auto; background: transparent;">
   <tr style="border: none; background: transparent;">
     <th colspan="3" align="center" style="border: none; padding: 10px; font-weight: bold; font-size: 1.1em; color: #4C1D95; letter-spacing: 1px;">
-      🌐 GLOBAL EXTERNAL STATS
+      GLOBAL EXTERNAL STATS
     </th>
     <th colspan="3" align="center" style="border: none; padding: 10px; font-weight: bold; font-size: 1.1em; color: #4C1D95; letter-spacing: 1px;">
-      🎯 TARGET REPOS STATS
+      TARGET REPOS STATS
     </th>
   </tr>
   <tr style="border: none; background: transparent;">
@@ -202,15 +204,15 @@ Welcome to my GitHub profile! This page is automatically updated with my latest 
 <table align="center" style="border: 1px solid #E9D5FF; border-radius: 12px; width: 100%; max-width: 800px; margin: 20px auto; background: #FAF5FF; border-collapse: separate; padding: 15px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.05);">
   <tr style="border: none; background: transparent;">
     <td style="width: 55%; vertical-align: middle; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border: none;">
-      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">📊 Activity Overview</h3>
+      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">Activity Overview</h3>
       <p style="color: #6D28D9; font-size: 0.95em; line-height: 1.6;">
         Contributed to <strong>unionai-oss/pandera</strong>, <strong>rage-rb/rage</strong>, <strong>kubeedge/website</strong> and <strong>27 other repositories</strong> across GitHub.
       </p>
       <div style="margin-top: 20px;">
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">🚀 343 Commits</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">🔑 82 PRs</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">💬 76 Issues</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">🔍 26 Reviews</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Commits: 343</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">PRs: 82</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Issues: 76</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Reviews: 26</span>
       </div>
     </td>
     <td align="center" style="width: 45%; vertical-align: middle; padding: 15px; border: none;">
@@ -251,4 +253,4 @@ Welcome to my GitHub profile! This page is automatically updated with my latest 
 
 
 
-*Last updated: 2026-07-03 05:06:51 UTC*
+*Last updated: 2026-07-03 05:12:57 UTC*

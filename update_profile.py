@@ -103,7 +103,8 @@ def main():
     user = "RedZapdos123"
     
     report = []
-    report.append(f"# Hi there, I'm @{user} 👋\n")
+    report.append(f"# Hi there, I'm @{user}\n")
+    report.append(f"![Profile Views](https://komarev.com/ghpvc/?username={user}&color=purple&style=flat-square&label=Profile+Views)\n")
     report.append("Welcome to my GitHub profile! This page is automatically updated with my latest FOSS contributions and metrics.\n")
 
     # 1. Fetch commit counts
@@ -131,8 +132,6 @@ def main():
     merged_prs = [p for p in merged_prs if not is_excluded(p)]
     
     # Add co-authored DLT PR
-    # For stats purposes, we check if it is already in there. Since we only fetched repository in json fields,
-    # we just append a mock object for repository if it is not present.
     if not any(p.get("repository", {}).get("nameWithOwner", "") == "dlt-hub/dlt" for p in merged_prs):
         merged_prs.append({"repository": {"nameWithOwner": "dlt-hub/dlt"}})
         
@@ -256,10 +255,10 @@ def main():
     dashboard_html = f"""<table align="center" style="border: none; border-collapse: collapse; width: 100%; max-width: 800px; margin: 20px auto; background: transparent;">
   <tr style="border: none; background: transparent;">
     <th colspan="3" align="center" style="border: none; padding: 10px; font-weight: bold; font-size: 1.1em; color: #4C1D95; letter-spacing: 1px;">
-      🌐 GLOBAL EXTERNAL STATS
+      GLOBAL EXTERNAL STATS
     </th>
     <th colspan="3" align="center" style="border: none; padding: 10px; font-weight: bold; font-size: 1.1em; color: #4C1D95; letter-spacing: 1px;">
-      🎯 TARGET REPOS STATS
+      TARGET REPOS STATS
     </th>
   </tr>
   <tr style="border: none; background: transparent;">
@@ -288,15 +287,15 @@ def main():
     activity_overview_card = f"""<table align="center" style="border: 1px solid #E9D5FF; border-radius: 12px; width: 100%; max-width: 800px; margin: 20px auto; background: #FAF5FF; border-collapse: separate; padding: 15px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.05);">
   <tr style="border: none; background: transparent;">
     <td style="width: 55%; vertical-align: middle; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border: none;">
-      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">📊 Activity Overview</h3>
+      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">Activity Overview</h3>
       <p style="color: #6D28D9; font-size: 0.95em; line-height: 1.6;">
         {repos_desc}
       </p>
       <div style="margin-top: 20px;">
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">🚀 {overall_commits} Commits</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">🔑 {overall_merged_prs_count} PRs</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">💬 {overall_issues_count} Issues</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">🔍 {code_reviews_count} Reviews</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Commits: {overall_commits}</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">PRs: {overall_merged_prs_count}</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Issues: {overall_issues_count}</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Reviews: {code_reviews_count}</span>
       </div>
     </td>
     <td align="center" style="width: 45%; vertical-align: middle; padding: 15px; border: none;">
@@ -306,7 +305,7 @@ def main():
 </table>
 """
 
-    report.append("## 📈 Contribution Statistics\n")
+    report.append("## Contribution Statistics\n")
     report.append(dashboard_html)
     report.append("\n")
     report.append(activity_overview_card)
