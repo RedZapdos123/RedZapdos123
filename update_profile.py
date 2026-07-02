@@ -45,12 +45,12 @@ def run_gh_command(args):
     result = subprocess.run(cmd, capture_output=True, text=True, env=env, encoding="utf-8")
     if result.returncode != 0:
         print(f"Error running command: {' '.join(cmd)}\n{result.stderr}")
-        return []
+        return {}
     try:
         return json.loads(result.stdout)
     except Exception as e:
         print(f"Failed to parse JSON for command {' '.join(cmd)}: {e}")
-        return []
+        return {}
 
 def get_commit_count(user, repos=None):
     if not repos:
@@ -99,60 +99,9 @@ def generate_badge_svg(number, label_line1, label_line2):
         font-size="7.5" font-weight="600" fill="#A78BFA" text-anchor="middle" letter-spacing="0.5">{label_line2}</text>
 </svg>"""
 
-def clean_body(body, title):
-    if not body:
-        return title
-    # Remove markdown image/link tags like ![image](...)
-    body = re.sub(r'!\[.*?\]\(.*?\)', '', body)
-    # Remove HTML tags
-    body = re.sub(r'<[^>]*>', '', body)
-    # Remove markdown headers
-    body = re.sub(r'^#+\s+.*$', '', body, flags=re.MULTILINE)
-    # Remove checklists like - [x] or - [ ]
-    body = re.sub(r'-\s+\[[ xX]\]', '', body)
-    # Replace multiple newlines/spaces
-    body = re.sub(r'\r\n', '\n', body)
-    body = re.sub(r'\n+', '\n', body)
-    body = re.sub(r'\s+', ' ', body)
-    body = body.strip()
-    
-    # If cleaned body is too short, fall back to title
-    if len(body) < 20:
-        return title
-    
-    # Extract the first few sentences/lines
-    sentences = re.split(r'(?<=[.!?])\s+', body)
-    summary_sentences = []
-    char_count = 0
-    for s in sentences:
-        if s.strip():
-            summary_sentences.append(s.strip())
-            char_count += len(s)
-            if len(summary_sentences) >= 3 or char_count > 250:
-                break
-    
-    return " ".join(summary_sentences)
-
-def format_date(date_str):
-    if not date_str or date_str.startswith("0001-01-01"):
-        return "N/A"
-    try:
-        dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
-        return dt.strftime("%Y-%m-%d")
-    except Exception:
-        return date_str
-
 def main():
     user = "RedZapdos123"
     
-    triaged_data = []
-    if os.path.exists("triaged_issues.json"):
-        try:
-            with open("triaged_issues.json", "r", encoding="utf-8") as f:
-                triaged_data = json.load(f)
-        except Exception as e:
-            print(f"Error loading triaged issues: {e}")
-
     report = []
     report.append(f"# Hi there, I'm @{user} 👋\n")
     report.append("Welcome to my GitHub profile! This page is automatically updated with my latest FOSS contributions and metrics.\n")
@@ -164,8 +113,10 @@ def main():
     
     # 2. Fetch merged PRs
     print(f"Fetching merged PRs for {user}...")
-    prs_args = ["search", "prs", "--author", user, "--merged", "--limit", "100", "--json", "repository,number,title,body,url,createdAt,closedAt"]
+    prs_args = ["search", "prs", "--author", user, "--merged", "--limit", "100", "--json", "repository"]
     merged_prs = run_gh_command(prs_args)
+    if not isinstance(merged_prs, list):
+        merged_prs = []
     
     # Exclude self-owned, co-owned, or specified accounts
     def is_excluded(item):
@@ -179,48 +130,37 @@ def main():
 
     merged_prs = [p for p in merged_prs if not is_excluded(p)]
     
-    # Fetch co-authored DLT PR
-    print("Fetching co-authored DLT PR...")
-    coauthored_dlt = run_gh_command(["api", "repos/dlt-hub/dlt/pulls/3851"])
-    if coauthored_dlt and isinstance(coauthored_dlt, dict):
-        mapped_pr = {
-            "body": coauthored_dlt.get("body", ""),
-            "closedAt": coauthored_dlt.get("merged_at") or coauthored_dlt.get("closed_at", ""),
-            "createdAt": coauthored_dlt.get("created_at", ""),
-            "number": coauthored_dlt.get("number"),
-            "repository": {
-                "name": "dlt",
-                "nameWithOwner": "dlt-hub/dlt"
-            },
-            "title": coauthored_dlt.get("title", "") + " (Co-authored)",
-            "url": coauthored_dlt.get("html_url", "")
-        }
-        if not any(p["number"] == mapped_pr["number"] and p["repository"]["nameWithOwner"] == "dlt-hub/dlt" for p in merged_prs):
-            merged_prs.append(mapped_pr)
-    
-    # Sort all merged PRs by closedAt descending
-    merged_prs.sort(key=lambda x: x.get("closedAt", ""), reverse=True)
+    # Add co-authored DLT PR
+    # For stats purposes, we check if it is already in there. Since we only fetched repository in json fields,
+    # we just append a mock object for repository if it is not present.
+    if not any(p.get("repository", {}).get("nameWithOwner", "") == "dlt-hub/dlt" for p in merged_prs):
+        merged_prs.append({"repository": {"nameWithOwner": "dlt-hub/dlt"}})
         
-    # Calculate merged PR stats
     overall_merged_prs_count = len(merged_prs)
     target_merged_prs_count = len([p for p in merged_prs if p.get("repository", {}).get("nameWithOwner", "") in TARGET_REPOS])
 
     # 3. Fetch Open PRs
     print(f"Fetching open PRs for {user}...")
-    open_prs_args = ["search", "prs", "--author", user, "--state", "open", "--limit", "100", "--json", "repository,number,title,body,url,createdAt"]
+    open_prs_args = ["search", "prs", "--author", user, "--state", "open", "--limit", "100", "--json", "repository"]
     open_prs = run_gh_command(open_prs_args)
+    if not isinstance(open_prs, list):
+        open_prs = []
     open_prs = [p for p in open_prs if not is_excluded(p)]
     
     # 4. Fetch Opened Issues
     print(f"Fetching opened issues for {user}...")
-    issues_open_args = ["search", "issues", "type:issue", "--author", user, "--state", "open", "--limit", "100", "--json", "repository,number,title,body,url,createdAt"]
+    issues_open_args = ["search", "issues", "type:issue", "--author", user, "--state", "open", "--limit", "100", "--json", "repository"]
     open_issues = run_gh_command(issues_open_args)
+    if not isinstance(open_issues, list):
+        open_issues = []
     open_issues = [i for i in open_issues if not is_excluded(i)]
     
     # 5. Fetch Closed Issues
     print(f"Fetching closed issues for {user}...")
-    issues_closed_args = ["search", "issues", "type:issue", "--author", user, "--state", "closed", "--limit", "100", "--json", "repository,number,title,body,url,closedAt"]
+    issues_closed_args = ["search", "issues", "type:issue", "--author", user, "--state", "closed", "--limit", "100", "--json", "repository"]
     closed_issues = run_gh_command(issues_closed_args)
+    if not isinstance(closed_issues, list):
+        closed_issues = []
     closed_issues = [i for i in closed_issues if not is_excluded(i)]
     
     # Calculate issues stats
@@ -230,7 +170,89 @@ def main():
         len([i for i in closed_issues if i.get("repository", {}).get("nameWithOwner", "") in TARGET_REPOS])
     )
 
-    # 6. Generate circular gauge dashboard HTML
+    # 6. Fetch code reviews count
+    print(f"Fetching code reviews count for {user}...")
+    reviews_res = run_gh_command(["api", f"search/issues?q=reviewed-by:{user}+type:pr"])
+    code_reviews_count = reviews_res.get("total_count", 0) if isinstance(reviews_res, dict) else 0
+
+    # 7. Aggregate top repos
+    repo_counts = {}
+    for items in [merged_prs, open_prs, open_issues, closed_issues]:
+        for item in items:
+            repo = item.get("repository", {}).get("nameWithOwner", "")
+            if repo:
+                repo_counts[repo] = repo_counts.get(repo, 0) + 1
+    
+    sorted_repos = sorted(repo_counts.items(), key=lambda x: x[1], reverse=True)
+    top_repos = [r[0] for r in sorted_repos]
+    other_repos_count = max(0, len(repo_counts) - 3)
+
+    if len(top_repos) >= 3:
+        repos_desc = f"Contributed to <strong>{top_repos[0]}</strong>, <strong>{top_repos[1]}</strong>, <strong>{top_repos[2]}</strong> and <strong>{other_repos_count} other repositories</strong> across GitHub."
+    elif len(top_repos) == 2:
+        repos_desc = f"Contributed to <strong>{top_repos[0]}</strong> and <strong>{top_repos[1]}</strong> across GitHub."
+    elif len(top_repos) == 1:
+        repos_desc = f"Contributed to <strong>{top_repos[0]}</strong> across GitHub."
+    else:
+        repos_desc = "Actively contributing to open-source repositories across GitHub."
+
+    # 8. Calculate percentages for radar chart
+    total_activity = overall_commits + overall_merged_prs_count + overall_issues_count + code_reviews_count
+    if total_activity == 0:
+        total_activity = 1
+        
+    p_commits = overall_commits / total_activity
+    p_prs = overall_merged_prs_count / total_activity
+    p_issues = overall_issues_count / total_activity
+    p_reviews = code_reviews_count / total_activity
+
+    d_max = 70
+    x_center = 120
+    y_center = 110
+    
+    # West (left): Commits
+    x_commits = x_center - d_max * p_commits
+    # South (bottom): Pull Requests
+    y_prs = y_center + d_max * p_prs
+    # East (right): Issues
+    x_issues = x_center + d_max * p_issues
+    # North (top): Code Reviews
+    y_reviews = y_center - d_max * p_reviews
+
+    polygon_points = f"{x_center},{y_reviews:.1f} {x_issues:.1f},{y_center} {x_center},{y_prs:.1f} {x_commits:.1f},{y_center}"
+
+    radar_chart_svg = f"""<svg width="240" height="220" viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg" style="background: transparent; display: block; margin: auto;">
+  <!-- Grid Lines (Diamonds) -->
+  <polygon points="120,92.5 137.5,110 120,127.5 102.5,110" fill="none" stroke="#E9D5FF" stroke-width="1" stroke-dasharray="2 2" />
+  <polygon points="120,75 155,110 120,145 85,110" fill="none" stroke="#E9D5FF" stroke-width="1" stroke-dasharray="2 2" />
+  <polygon points="120,57.5 172.5,110 120,162.5 67.5,110" fill="none" stroke="#E9D5FF" stroke-width="1" stroke-dasharray="2 2" />
+  <polygon points="120,40 190,110 120,180 50,110" fill="none" stroke="#D8B4FE" stroke-width="1" />
+
+  <!-- Axes -->
+  <line x1="120" y1="40" x2="120" y2="180" stroke="#C084FC" stroke-width="1.5" />
+  <line x1="50" y1="110" x2="190" y2="110" stroke="#C084FC" stroke-width="1.5" />
+
+  <!-- Activity Polygon -->
+  <polygon points="{polygon_points}" fill="#A78BFA" fill-opacity="0.4" stroke="#7C3AED" stroke-width="2" />
+
+  <!-- Data Points -->
+  <circle cx="{x_center}" cy="{y_reviews:.1f}" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
+  <circle cx="{x_issues:.1f}" cy="{y_center}" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
+  <circle cx="{x_center}" cy="{y_prs:.1f}" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
+  <circle cx="{x_commits:.1f}" cy="{y_center}" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
+
+  <!-- Labels -->
+  <!-- North (Code Review) -->
+  <text x="120" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="middle">{p_reviews:.0%} Code review</text>
+  <!-- East (Issues) -->
+  <text x="196" y="113" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="start">{p_issues:.0%} Issues</text>
+  <!-- South (Pull Requests) -->
+  <text x="120" y="196" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="middle">{p_prs:.0%} Pull requests</text>
+  <!-- West (Commits) -->
+  <text x="44" y="113" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="end">{p_commits:.0%} Commits</text>
+</svg>"""
+
+    # Generate circular gauge dashboard HTML
     dashboard_html = f"""<table align="center" style="border: none; border-collapse: collapse; width: 100%; max-width: 800px; margin: 20px auto; background: transparent;">
   <tr style="border: none; background: transparent;">
     <th colspan="3" align="center" style="border: none; padding: 10px; font-weight: bold; font-size: 1.1em; color: #4C1D95; letter-spacing: 1px;">
@@ -262,96 +284,33 @@ def main():
   </tr>
 </table>
 """
+
+    activity_overview_card = f"""<table align="center" style="border: 1px solid #E9D5FF; border-radius: 12px; width: 100%; max-width: 800px; margin: 20px auto; background: #FAF5FF; border-collapse: separate; padding: 15px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.05);">
+  <tr style="border: none; background: transparent;">
+    <td style="width: 55%; vertical-align: middle; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border: none;">
+      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">📊 Activity Overview</h3>
+      <p style="color: #6D28D9; font-size: 0.95em; line-height: 1.6;">
+        {repos_desc}
+      </p>
+      <div style="margin-top: 20px;">
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">🚀 {overall_commits} Commits</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">🔑 {overall_merged_prs_count} PRs</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">💬 {overall_issues_count} Issues</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">🔍 {code_reviews_count} Reviews</span>
+      </div>
+    </td>
+    <td align="center" style="width: 45%; vertical-align: middle; padding: 15px; border: none;">
+      {radar_chart_svg}
+    </td>
+  </tr>
+</table>
+"""
+
+    report.append("## 📈 Contribution Statistics\n")
     report.append(dashboard_html)
     report.append("\n")
-
-    # Merged Pull Requests detail table
-    report.append("### 🚀 Merged Pull Requests\n")
-    if merged_prs:
-        report.append("| # | Repository | PR | Title | Merged Date | Description |")
-        report.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
-        for idx, pr in enumerate(merged_prs, 1):
-            repo = pr['repository']['nameWithOwner']
-            num = pr['number']
-            url = pr['url']
-            title = pr['title']
-            merged_date = format_date(pr['closedAt'])
-            desc = clean_body(pr['body'], title)
-            report.append(f"| {idx} | {repo} | [#{num}]({url}) | {title} | {merged_date} | {desc} |")
-    else:
-        report.append("*No merged pull requests found.*\n")
+    report.append(activity_overview_card)
     report.append("\n")
-
-    # Open Pull Requests detail table
-    report.append("### ⏳ Open Pull Requests\n")
-    if open_prs:
-        report.append("| # | Repository | PR | Title | Created Date | Description |")
-        report.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
-        for idx, pr in enumerate(open_prs, 1):
-            repo = pr['repository']['nameWithOwner']
-            num = pr['number']
-            url = pr['url']
-            title = pr['title']
-            created_date = format_date(pr['createdAt'])
-            desc = clean_body(pr['body'], title)
-            report.append(f"| {idx} | {repo} | [#{num}]({url}) | {title} | {created_date} | {desc} |")
-    else:
-        report.append("*No open pull requests found.*\n")
-    report.append("\n")
-
-    # Opened Issues detail table
-    report.append("### 📋 Opened Issues\n")
-    if open_issues:
-        report.append("| # | Repository | Issue | Title | Created Date | Description |")
-        report.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
-        for idx, issue in enumerate(open_issues, 1):
-            repo = issue['repository']['nameWithOwner']
-            num = issue['number']
-            url = issue['url']
-            title = issue['title']
-            created_date = format_date(issue['createdAt'])
-            desc = clean_body(issue['body'], title)
-            report.append(f"| {idx} | {repo} | [#{num}]({url}) | {title} | {created_date} | {desc} |")
-    else:
-        report.append("*No open issues found.*\n")
-    report.append("\n")
-
-    # Closed Issues detail table
-    report.append("### ✅ Closed Issues\n")
-    if closed_issues:
-        report.append("| # | Repository | Issue | Title | Closed Date | Description |")
-        report.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
-        for idx, issue in enumerate(closed_issues, 1):
-            repo = issue['repository']['nameWithOwner']
-            num = issue['number']
-            url = issue['url']
-            title = issue['title']
-            closed_date = format_date(issue['closedAt'])
-            desc = clean_body(issue['body'], title)
-            report.append(f"| {idx} | {repo} | [#{num}]({url}) | {title} | {closed_date} | {desc} |")
-    else:
-        report.append("*No closed issues found.*\n")
-    report.append("\n")
-
-    # Triaged Issues detail table
-    user_triaged = [i for i in triaged_data if i.get("user") == user]
-    report.append("### 🔍 Triaged Issues\n")
-    report.append("Issues opened by others that were closed after commenting or contributing to triaging.\n")
-    if user_triaged:
-        report.append("| # | Repository | Issue | Title | Closed Date | Description |")
-        report.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
-        for idx, issue in enumerate(user_triaged, 1):
-            repo = issue['repo']
-            num = issue['number']
-            url = issue['url']
-            title = issue['title']
-            closed_date = format_date(issue['closedAt'])
-            desc = clean_body(issue['body'], title)
-            report.append(f"| {idx} | {repo} | [#{num}]({url}) | {title} | {closed_date} | {desc} |")
-    else:
-        report.append("*No triaged issues found.*\n")
-    report.append("\n")
-    
     report.append(f"\n*Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} UTC*")
 
     # Write output to README.md
