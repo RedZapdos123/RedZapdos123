@@ -1,6 +1,8 @@
 # Hi there, I'm @RedZapdos123
 
-![Profile Views](https://komarev.com/ghpvc/?username=RedZapdos123&color=purple&style=flat-square&label=Profile+Views)
+<div align="center">
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=RedZapdos123.RedZapdos123" />
+</div>
 
 Welcome to my GitHub profile! This page is automatically updated with my latest FOSS contributions and metrics.
 
@@ -253,4 +255,4 @@ Welcome to my GitHub profile! This page is automatically updated with my latest 
 
 
 
-*Last updated: 2026-07-03 05:12:57 UTC*
+*Last updated: 2026-07-03 05:19:32 UTC*

@@ -104,7 +104,7 @@ def main():
     
     report = []
     report.append(f"# Hi there, I'm @{user}\n")
-    report.append(f"![Profile Views](https://komarev.com/ghpvc/?username={user}&color=purple&style=flat-square&label=Profile+Views)\n")
+    report.append(f'<div align="center">\n  <img src="https://visitor-badge.laobi.icu/badge?page_id={user}.{user}" />\n</div>\n')
     report.append("Welcome to my GitHub profile! This page is automatically updated with my latest FOSS contributions and metrics.\n")
 
     # 1. Fetch commit counts
