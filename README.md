@@ -203,56 +203,5 @@ Welcome to my GitHub profile! This page is automatically updated with my latest 
 
 
 
-<table align="center" style="border: 1px solid #E9D5FF; border-radius: 12px; width: 100%; max-width: 800px; margin: 20px auto; background: #FAF5FF; border-collapse: separate; padding: 15px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.05);">
-  <tr style="border: none; background: transparent;">
-    <td style="width: 55%; vertical-align: middle; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border: none;">
-      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">Target Repositories Activity Overview</h3>
-      <p style="color: #6D28D9; font-size: 0.95em; line-height: 1.6;">
-        Contributed to <strong>unionai-oss/pandera</strong>, <strong>rage-rb/rage</strong>, <strong>rubocop/rubocop</strong> and <strong>19 other target repositories</strong>.
-      </p>
-      <div style="margin-top: 20px;">
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Commits: 54</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">PRs: 68</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Issues: 55</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Reviews: 14</span>
-      </div>
-    </td>
-    <td align="center" style="width: 45%; vertical-align: middle; padding: 15px; border: none;">
-      <svg width="240" height="220" viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg" style="background: transparent; display: block; margin: auto;">
-  <!-- Grid Lines (Diamonds) -->
-  <polygon points="120,92.5 137.5,110 120,127.5 102.5,110" fill="none" stroke="#E9D5FF" stroke-width="1" stroke-dasharray="2 2" />
-  <polygon points="120,75 155,110 120,145 85,110" fill="none" stroke="#E9D5FF" stroke-width="1" stroke-dasharray="2 2" />
-  <polygon points="120,57.5 172.5,110 120,162.5 67.5,110" fill="none" stroke="#E9D5FF" stroke-width="1" stroke-dasharray="2 2" />
-  <polygon points="120,40 190,110 120,180 50,110" fill="none" stroke="#D8B4FE" stroke-width="1" />
 
-  <!-- Axes -->
-  <line x1="120" y1="40" x2="120" y2="180" stroke="#C084FC" stroke-width="1.5" />
-  <line x1="50" y1="110" x2="190" y2="110" stroke="#C084FC" stroke-width="1.5" />
-
-  <!-- Activity Polygon -->
-  <polygon points="120,104.9 140.2,110 120,134.9 100.2,110" fill="#A78BFA" fill-opacity="0.4" stroke="#7C3AED" stroke-width="2" />
-
-  <!-- Data Points -->
-  <circle cx="120" cy="104.9" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
-  <circle cx="140.2" cy="110" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
-  <circle cx="120" cy="134.9" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
-  <circle cx="100.2" cy="110" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
-
-  <!-- Labels -->
-  <!-- North (Code Review) -->
-  <text x="120" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="middle">7% Code review</text>
-  <!-- East (Issues) -->
-  <text x="196" y="113" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="start">29% Issues</text>
-  <!-- South (Pull Requests) -->
-  <text x="120" y="196" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="middle">36% Pull requests</text>
-  <!-- West (Commits) -->
-  <text x="44" y="113" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="end">28% Commits</text>
-</svg>
-    </td>
-  </tr>
-</table>
-
-
-
-
-*Last updated: 2026-07-03 05:56:08 UTC*
+*Last updated: 2026-07-03 06:00:40 UTC*
