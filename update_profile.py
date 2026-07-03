@@ -24,53 +24,57 @@ def run_gh_command(args):
         return []
 
 def generate_card_svg(prs_count, issues_count):
-    return f"""<svg width="450" height="150" viewBox="0 0 450 150" xmlns="http://www.w3.org/2000/svg" style="background: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    # Professional github-readme-stats style SVG card
+    return f"""<svg width="495" height="195" viewBox="0 0 495 195" xmlns="http://www.w3.org/2000/svg" style="background: transparent; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Ubuntu, sans-serif;">
   <defs>
-    <!-- Gradient for the rings -->
+    <!-- Purple Gradient for the rings -->
     <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#C084FC" />
       <stop offset="100%" stop-color="#7C3AED" />
     </linearGradient>
-    <!-- Drop Shadow Filter -->
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#7C3AED" flood-opacity="0.15" />
+    <!-- Drop Shadow Filter for a premium feel -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#7C3AED" flood-opacity="0.25" />
     </filter>
   </defs>
 
-  <!-- Card Body -->
-  <rect width="450" height="150" rx="16" fill="#FAF5FF" stroke="#E9D5FF" stroke-width="1.5" />
+  <!-- Card Background (standard github-readme-stats dimensions and border) -->
+  <rect x="0.5" y="0.5" width="494" height="194" rx="4.5" fill="#0D0E15" stroke="#312E81" stroke-width="1" />
 
-  <!-- Header -->
-  <text x="25" y="34" font-size="15" font-weight="bold" fill="#4C1D95" letter-spacing="0.5">FOSS Contributions</text>
+  <!-- Card Title -->
+  <text x="25" y="35" font-size="18" font-weight="bold" fill="#C084FC">FOSS Contributions</text>
 
-  <line x1="20" y1="52" x2="430" y2="52" stroke="#E9D5FF" stroke-width="1" />
+  <!-- Divider line -->
+  <line x1="25" y1="48" x2="470" y2="48" stroke="#312E81" stroke-width="1.5" />
 
-  <!-- Gauge 1: PRs -->
-  <g transform="translate(130, 98)">
-    <!-- Background circle (270 degree arc: dasharray="165 55" for r=35) -->
-    <circle cx="0" cy="0" r="30" stroke="#F3E8FF" stroke-width="6.5" stroke-linecap="round" fill="none" 
+  <!-- Gauge 1: FOSS PRs Merged -->
+  <g transform="translate(150, 105)">
+    <!-- Background Track -->
+    <circle cx="0" cy="0" r="30" stroke="#1E1B4B" stroke-width="6" stroke-linecap="round" fill="none" 
             stroke-dasharray="141.4 47.1" transform="rotate(135)" />
-    <!-- Foreground circle -->
-    <circle cx="0" cy="0" r="30" stroke="url(#purpleGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" 
+    <!-- Foreground Gauge -->
+    <circle cx="0" cy="0" r="30" stroke="url(#purpleGrad)" stroke-width="6" stroke-linecap="round" fill="none" 
             stroke-dasharray="141.4 47.1" transform="rotate(135)" filter="url(#shadow)" />
-    <!-- Text -->
-    <text x="0" y="-3" font-size="16" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">{prs_count}</text>
-    <text x="0" y="14" font-size="8" font-weight="800" fill="#7C3AED" text-anchor="middle" letter-spacing="0.5">FOSS PRs</text>
-    <text x="0" y="23" font-size="7" font-weight="600" fill="#A78BFA" text-anchor="middle" letter-spacing="0.5">MERGED</text>
+    <!-- Centered Number -->
+    <text x="0" y="5" font-size="18" font-weight="bold" fill="#FAF5FF" text-anchor="middle" dominant-baseline="middle">{prs_count}</text>
+    <!-- Labels (completely separated to prevent overlaps) -->
+    <text x="0" y="50" font-size="11" font-weight="bold" fill="#FAF5FF" text-anchor="middle">FOSS PRs</text>
+    <text x="0" y="62" font-size="9" font-weight="bold" fill="#A78BFA" text-anchor="middle">MERGED</text>
   </g>
 
-  <!-- Gauge 2: Issues -->
-  <g transform="translate(320, 98)">
-    <!-- Background circle -->
-    <circle cx="0" cy="0" r="30" stroke="#F3E8FF" stroke-width="6.5" stroke-linecap="round" fill="none" 
+  <!-- Gauge 2: FOSS Issues Authored -->
+  <g transform="translate(345, 105)">
+    <!-- Background Track -->
+    <circle cx="0" cy="0" r="30" stroke="#1E1B4B" stroke-width="6" stroke-linecap="round" fill="none" 
             stroke-dasharray="141.4 47.1" transform="rotate(135)" />
-    <!-- Foreground circle -->
-    <circle cx="0" cy="0" r="30" stroke="url(#purpleGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" 
+    <!-- Foreground Gauge -->
+    <circle cx="0" cy="0" r="30" stroke="url(#purpleGrad)" stroke-width="6" stroke-linecap="round" fill="none" 
             stroke-dasharray="141.4 47.1" transform="rotate(135)" filter="url(#shadow)" />
-    <!-- Text -->
-    <text x="0" y="-3" font-size="16" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">{issues_count}</text>
-    <text x="0" y="14" font-size="8" font-weight="800" fill="#7C3AED" text-anchor="middle" letter-spacing="0.5">FOSS ISSUES</text>
-    <text x="0" y="23" font-size="7" font-weight="600" fill="#A78BFA" text-anchor="middle" letter-spacing="0.5">AUTHORED</text>
+    <!-- Centered Number -->
+    <text x="0" y="5" font-size="18" font-weight="bold" fill="#FAF5FF" text-anchor="middle" dominant-baseline="middle">{issues_count}</text>
+    <!-- Labels (completely separated to prevent overlaps) -->
+    <text x="0" y="50" font-size="11" font-weight="bold" fill="#FAF5FF" text-anchor="middle">FOSS Issues</text>
+    <text x="0" y="62" font-size="9" font-weight="bold" fill="#A78BFA" text-anchor="middle">AUTHORED</text>
   </g>
 </svg>"""
 
