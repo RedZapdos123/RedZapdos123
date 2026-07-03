@@ -14,14 +14,22 @@ def run_gh_command(args):
         
     cmd = [gh_path] + args
     result = subprocess.run(cmd, capture_output=True, text=True, env=env, encoding="utf-8")
+    
+    # If the command failed and GITHUB_TOKEN is present, retry without it to fall back to keyring/keychain
+    if result.returncode != 0 and "GITHUB_TOKEN" in env:
+        print(f"Command failed with GITHUB_TOKEN. Retrying without GITHUB_TOKEN environment variable...")
+        retry_env = env.copy()
+        del retry_env["GITHUB_TOKEN"]
+        result = subprocess.run(cmd, capture_output=True, text=True, env=retry_env, encoding="utf-8")
+        
     if result.returncode != 0:
         print(f"Error running command: {' '.join(cmd)}\n{result.stderr}")
-        return []
+        return None
     try:
         return json.loads(result.stdout)
     except Exception as e:
         print(f"Failed to parse JSON: {e}")
-        return []
+        return None
 
 def generate_card_svg(prs_count, issues_count):
     # Professional side-by-side layout with larger circles (r=55) and transparent/adaptive styling
@@ -117,6 +125,21 @@ def generate_card_svg(prs_count, issues_count):
   </g>
 </svg>"""
 
+def get_existing_counts():
+    try:
+        if os.path.exists("profile-summary.svg"):
+            with open("profile-summary.svg", "r", encoding="utf-8") as f:
+                content = f.read()
+            import re
+            prs_match = re.search(r'class="prs-num"[^>]*>(\d+)</text>', content)
+            iss_match = re.search(r'class="iss-num"[^>]*>(\d+)</text>', content)
+            prs = int(prs_match.group(1)) if prs_match else 0
+            iss = int(iss_match.group(1)) if iss_match else 0
+            return prs, iss
+    except Exception as e:
+        print(f"Error reading existing counts: {e}")
+    return 0, 0
+
 def main():
     user = "RedZapdos123"
     exclude_users = ["RedZapdos123", "WhiteMetagross", "Digvijay-x1", "swarupn17", "Paraspandey-debugs", "yenode", "RajanPatil1904", "LevelSilence", "BlackRaichu"]
@@ -135,31 +158,30 @@ def main():
     print(f"Fetching merged PRs for {user}...")
     prs_args = ["search", "prs", "--author", user, "--merged", "--limit", "1000", "--json", "repository"]
     merged_prs = run_gh_command(prs_args)
-    if not isinstance(merged_prs, list):
-        merged_prs = []
-    merged_prs = [p for p in merged_prs if not is_excluded(p)]
-    
-    # Add co-authored DLT PR
-    merged_prs.append({"repository": {"nameWithOwner": "dlt-hub/dlt"}})
-    foss_prs_count = len(merged_prs)
 
     # 2. Fetch Open Issues
     print(f"Fetching open issues for {user}...")
     issues_open_args = ["search", "issues", "type:issue", "--author", user, "--state", "open", "--limit", "1000", "--json", "repository"]
     open_issues = run_gh_command(issues_open_args)
-    if not isinstance(open_issues, list):
-        open_issues = []
-    open_issues = [i for i in open_issues if not is_excluded(i)]
     
     # 3. Fetch Closed Issues
     print(f"Fetching closed issues for {user}...")
     issues_closed_args = ["search", "issues", "type:issue", "--author", user, "--state", "closed", "--limit", "1000", "--json", "repository"]
     closed_issues = run_gh_command(issues_closed_args)
-    if not isinstance(closed_issues, list):
-        closed_issues = []
-    closed_issues = [i for i in closed_issues if not is_excluded(i)]
     
-    foss_issues_count = len(open_issues) + len(closed_issues)
+    # Handle failures and count calculations
+    if merged_prs is None or open_issues is None or closed_issues is None:
+        print("Warning: One or more GitHub CLI commands failed. Preserving existing counts.")
+        foss_prs_count, foss_issues_count = get_existing_counts()
+    else:
+        merged_prs = [p for p in merged_prs if not is_excluded(p)]
+        # Add co-authored DLT PR
+        merged_prs.append({"repository": {"nameWithOwner": "dlt-hub/dlt"}})
+        foss_prs_count = len(merged_prs)
+
+        open_issues = [i for i in open_issues if not is_excluded(i)]
+        closed_issues = [i for i in closed_issues if not is_excluded(i)]
+        foss_issues_count = len(open_issues) + len(closed_issues)
 
     # Save SVG card to file (at the repository root for rendering)
     card_svg = generate_card_svg(foss_prs_count, foss_issues_count)
