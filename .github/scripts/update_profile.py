@@ -24,8 +24,8 @@ def run_gh_command(args):
         return []
 
 def generate_card_svg(prs_count, issues_count):
-    # Expanded vertically stacked layout with extra-large circles (r=65)
-    return f"""<svg width="300" height="440" viewBox="0 0 300 440" xmlns="http://www.w3.org/2000/svg" style="background: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    # Professional side-by-side layout with larger circles (r=55) and transparent/adaptive styling
+    return f"""<svg width="495" height="195" viewBox="0 0 495 195" xmlns="http://www.w3.org/2000/svg" style="background: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
   <defs>
     <!-- Purple Gradient for PRs -->
     <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -78,42 +78,42 @@ def generate_card_svg(prs_count, issues_count):
   </style>
 
   <!-- Transparent Card Background -->
-  <rect x="1" y="1" width="298" height="438" rx="16" fill="none" stroke="none" />
+  <rect x="1" y="1" width="493" height="193" rx="16" fill="none" stroke="none" />
 
   <!-- Header (FOSS Contributions: in Black) -->
-  <text x="25" y="35" font-size="15" font-weight="bold" class="title" letter-spacing="0.5">FOSS Contributions:</text>
+  <text x="25" y="35" font-size="18" font-weight="bold" class="title" letter-spacing="0.5">FOSS Contributions:</text>
 
   <!-- Divider line -->
-  <line x1="20" y1="48" x2="280" y2="48" class="line-div" stroke-width="1" />
+  <line x1="20" y1="48" x2="475" y2="48" class="line-div" stroke-width="1" />
 
   <!-- Gauge 1: FOSS PRs Merged (Purple Theme) -->
-  <g transform="translate(150, 145)">
-    <!-- Background track circle (r=65, stroke-dasharray="306.3 102.1" for 270-degree cutout) -->
-    <circle cx="0" cy="0" r="65" class="prs-track" stroke-width="11" stroke-linecap="round" fill="none" 
-            stroke-dasharray="306.3 102.1" transform="rotate(135)" />
+  <g transform="translate(145, 120)">
+    <!-- Background track circle (r=55, stroke-dasharray="259.2 86.4" for 270-degree cutout) -->
+    <circle cx="0" cy="0" r="55" class="prs-track" stroke-width="10" stroke-linecap="round" fill="none" 
+            stroke-dasharray="259.2 86.4" transform="rotate(135)" />
     <!-- Foreground Gauge -->
-    <circle cx="0" cy="0" r="65" stroke="url(#purpleGrad)" stroke-width="11" stroke-linecap="round" fill="none" 
-            stroke-dasharray="306.3 102.1" transform="rotate(135)" filter="url(#shadowPurple)" />
+    <circle cx="0" cy="0" r="55" stroke="url(#purpleGrad)" stroke-width="10" stroke-linecap="round" fill="none" 
+            stroke-dasharray="259.2 86.4" transform="rotate(135)" filter="url(#shadowPurple)" />
     <!-- Centered Number -->
-    <text x="0" y="-10" font-size="32" font-weight="bold" class="prs-num" text-anchor="middle" dominant-baseline="middle">{prs_count}</text>
+    <text x="0" y="-8" font-size="26" font-weight="bold" class="prs-num" text-anchor="middle" dominant-baseline="middle">{prs_count}</text>
     <!-- Labels inside circle with optimized vertical space -->
-    <text x="0" y="22" font-size="13" font-weight="800" class="prs-lbl1" text-anchor="middle">FOSS PRs</text>
-    <text x="0" y="36" font-size="11" font-weight="600" class="prs-lbl2" text-anchor="middle">MERGED</text>
+    <text x="0" y="20" font-size="11.5" font-weight="800" class="prs-lbl1" text-anchor="middle">FOSS PRs</text>
+    <text x="0" y="32" font-size="10" font-weight="600" class="prs-lbl2" text-anchor="middle">MERGED</text>
   </g>
 
   <!-- Gauge 2: FOSS Issues Authored (Green Theme) -->
-  <g transform="translate(150, 320)">
+  <g transform="translate(350, 120)">
     <!-- Background track circle -->
-    <circle cx="0" cy="0" r="65" class="iss-track" stroke-width="11" stroke-linecap="round" fill="none" 
-            stroke-dasharray="306.3 102.1" transform="rotate(135)" />
+    <circle cx="0" cy="0" r="55" class="iss-track" stroke-width="10" stroke-linecap="round" fill="none" 
+            stroke-dasharray="259.2 86.4" transform="rotate(135)" />
     <!-- Foreground Gauge -->
-    <circle cx="0" cy="0" r="65" stroke="url(#greenGrad)" stroke-width="11" stroke-linecap="round" fill="none" 
-            stroke-dasharray="306.3 102.1" transform="rotate(135)" filter="url(#shadowGreen)" />
+    <circle cx="0" cy="0" r="55" stroke="url(#greenGrad)" stroke-width="10" stroke-linecap="round" fill="none" 
+            stroke-dasharray="259.2 86.4" transform="rotate(135)" filter="url(#shadowGreen)" />
     <!-- Centered Number -->
-    <text x="0" y="-10" font-size="32" font-weight="bold" class="iss-num" text-anchor="middle" dominant-baseline="middle">{issues_count}</text>
+    <text x="0" y="-8" font-size="26" font-weight="bold" class="iss-num" text-anchor="middle" dominant-baseline="middle">{issues_count}</text>
     <!-- Labels inside circle with optimized vertical space -->
-    <text x="0" y="22" font-size="13" font-weight="800" class="iss-lbl1" text-anchor="middle">FOSS ISSUES</text>
-    <text x="0" y="36" font-size="11" font-weight="600" class="iss-lbl2" text-anchor="middle">AUTHORED</text>
+    <text x="0" y="20" font-size="11.5" font-weight="800" class="iss-lbl1" text-anchor="middle">FOSS ISSUES</text>
+    <text x="0" y="32" font-size="10" font-weight="600" class="iss-lbl2" text-anchor="middle">AUTHORED</text>
   </g>
 </svg>"""
 
@@ -161,7 +161,7 @@ def main():
     
     foss_issues_count = len(open_issues) + len(closed_issues)
 
-    # Save SVG card to file
+    # Save SVG card to file (at the repository root for rendering)
     card_svg = generate_card_svg(foss_prs_count, foss_issues_count)
     with open("profile-summary.svg", "w", encoding="utf-8") as f:
         f.write(card_svg)
