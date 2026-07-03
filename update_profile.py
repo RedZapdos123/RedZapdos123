@@ -36,28 +36,34 @@ def run_gh_command(args):
     if "GITHUB_TOKEN" in env and (not env["GITHUB_TOKEN"] or env["GITHUB_TOKEN"].startswith("gho_")):
         del env["GITHUB_TOKEN"]
     
-    # Try standard Windows installation path, fall back to "gh" command in PATH (Linux Actions runner)
     gh_path = r"C:\Program Files\GitHub CLI\gh.exe"
     if not os.path.exists(gh_path):
         gh_path = "gh"
         
     cmd = [gh_path] + args
+    print(f"Running CLI command: {' '.join(cmd)}")
     result = subprocess.run(cmd, capture_output=True, text=True, env=env, encoding="utf-8")
+    print(f"Command finished with return code {result.returncode}")
     if result.returncode != 0:
-        print(f"Error running command: {' '.join(cmd)}\n{result.stderr}")
-        return {}
+        print(f"Error output: {result.stderr}")
+        return []
     try:
         return json.loads(result.stdout)
     except Exception as e:
-        print(f"Failed to parse JSON for command {' '.join(cmd)}: {e}")
-        return {}
+        print(f"Failed to parse JSON: {e}")
+        return []
 
-def get_commit_count(user, repos=None):
+def get_commit_count(user, repos=None, exclude_users=None):
     if not repos:
         query = f"author:{user}"
+        if exclude_users:
+            query += " " + " ".join(f"-user:{u}" for u in exclude_users)
     else:
         query = f"author:{user}+" + "+".join(f"repo:{r}" for r in repos)
     
+    # URL-encode spaces as +
+    query = query.replace(" ", "+")
+    print(f"Calculating commits count with query: {query}")
     res = run_gh_command(["api", f"search/commits?q={query}"])
     if isinstance(res, dict):
         return res.get("total_count", 0)
@@ -101,35 +107,38 @@ def generate_badge_svg(number, label_line1, label_line2):
 
 def main():
     user = "RedZapdos123"
+    exclude_users = ["RedZapdos123", "WhiteMetagross", "Digvijay-x1", "swarupn17"]
     
     report = []
     report.append(f"# Hi there, I'm @{user}\n")
     report.append(f'<div align="center">\n  <img src="https://visitor-badge.laobi.icu/badge?page_id={user}.{user}" />\n</div>\n')
     report.append("Welcome to my GitHub profile! This page is automatically updated with my latest FOSS contributions and metrics.\n")
 
-    # 1. Fetch commit counts
+    # 1. Fetch commit counts with exclusions applied
     print(f"Fetching commit counts for {user}...")
-    overall_commits = get_commit_count(user)
+    overall_commits = get_commit_count(user, exclude_users=exclude_users)
+    print(f"Overall commits: {overall_commits}")
     target_commits = get_commit_count(user, TARGET_REPOS)
+    print(f"Target commits: {target_commits}")
     
     # 2. Fetch merged PRs
     print(f"Fetching merged PRs for {user}...")
-    prs_args = ["search", "prs", "--author", user, "--merged", "--limit", "100", "--json", "repository"]
+    prs_args = ["search", "prs", "--author", user, "--merged", "--limit", "1000", "--json", "repository"]
     merged_prs = run_gh_command(prs_args)
     if not isinstance(merged_prs, list):
         merged_prs = []
+    print(f"Total raw merged PRs: {len(merged_prs)}")
     
     # Exclude self-owned, co-owned, or specified accounts
     def is_excluded(item):
         repo = item.get("repository", {}).get("nameWithOwner", "")
         owner = repo.split("/")[0].lower()
-        if owner in {"redzapdos123", "whitemetagross"}:
-            return True
-        if "digvijay" in owner or "swarup" in owner or "paraspandey" in owner:
+        if owner in {u.lower() for u in exclude_users}:
             return True
         return False
 
     merged_prs = [p for p in merged_prs if not is_excluded(p)]
+    print(f"Merged PRs after exclusion: {len(merged_prs)}")
     
     # Add co-authored DLT PR
     if not any(p.get("repository", {}).get("nameWithOwner", "") == "dlt-hub/dlt" for p in merged_prs):
@@ -140,27 +149,30 @@ def main():
 
     # 3. Fetch Open PRs
     print(f"Fetching open PRs for {user}...")
-    open_prs_args = ["search", "prs", "--author", user, "--state", "open", "--limit", "100", "--json", "repository"]
+    open_prs_args = ["search", "prs", "--author", user, "--state", "open", "--limit", "1000", "--json", "repository"]
     open_prs = run_gh_command(open_prs_args)
     if not isinstance(open_prs, list):
         open_prs = []
     open_prs = [p for p in open_prs if not is_excluded(p)]
+    print(f"Open PRs after exclusion: {len(open_prs)}")
     
     # 4. Fetch Opened Issues
     print(f"Fetching opened issues for {user}...")
-    issues_open_args = ["search", "issues", "type:issue", "--author", user, "--state", "open", "--limit", "100", "--json", "repository"]
+    issues_open_args = ["search", "issues", "type:issue", "--author", user, "--state", "open", "--limit", "1000", "--json", "repository"]
     open_issues = run_gh_command(issues_open_args)
     if not isinstance(open_issues, list):
         open_issues = []
     open_issues = [i for i in open_issues if not is_excluded(i)]
+    print(f"Open issues after exclusion: {len(open_issues)}")
     
     # 5. Fetch Closed Issues
     print(f"Fetching closed issues for {user}...")
-    issues_closed_args = ["search", "issues", "type:issue", "--author", user, "--state", "closed", "--limit", "100", "--json", "repository"]
+    issues_closed_args = ["search", "issues", "type:issue", "--author", user, "--state", "closed", "--limit", "1000", "--json", "repository"]
     closed_issues = run_gh_command(issues_closed_args)
     if not isinstance(closed_issues, list):
         closed_issues = []
     closed_issues = [i for i in closed_issues if not is_excluded(i)]
+    print(f"Closed issues after exclusion: {len(closed_issues)}")
     
     # Calculate issues stats
     overall_issues_count = len(open_issues) + len(closed_issues)
@@ -171,8 +183,12 @@ def main():
 
     # 6. Fetch code reviews count
     print(f"Fetching code reviews count for {user}...")
-    reviews_res = run_gh_command(["api", f"search/issues?q=reviewed-by:{user}+type:pr"])
-    code_reviews_count = reviews_res.get("total_count", 0) if isinstance(reviews_res, dict) else 0
+    reviews_res = run_gh_command(["search", "prs", "--reviewed-by", user, "--limit", "1000", "--json", "repository"])
+    if not isinstance(reviews_res, list):
+        reviews_res = []
+    reviews = [r for r in reviews_res if not is_excluded(r)]
+    target_reviews_count = len([r for r in reviews if r.get("repository", {}).get("nameWithOwner", "") in TARGET_REPOS])
+    print(f"Target reviews count: {target_reviews_count}")
 
     # 7. Aggregate top repos
     repo_counts = {}
@@ -182,28 +198,30 @@ def main():
             if repo:
                 repo_counts[repo] = repo_counts.get(repo, 0) + 1
     
-    sorted_repos = sorted(repo_counts.items(), key=lambda x: x[1], reverse=True)
-    top_repos = [r[0] for r in sorted_repos]
-    other_repos_count = max(0, len(repo_counts) - 3)
+    # Filter top repos to only include those in TARGET_REPOS for target card description
+    target_repo_counts = {r: c for r, c in repo_counts.items() if r in TARGET_REPOS}
+    sorted_target_repos = sorted(target_repo_counts.items(), key=lambda x: x[1], reverse=True)
+    top_target_repos = [r[0] for r in sorted_target_repos]
+    other_target_repos_count = max(0, len(target_repo_counts) - 3)
 
-    if len(top_repos) >= 3:
-        repos_desc = f"Contributed to <strong>{top_repos[0]}</strong>, <strong>{top_repos[1]}</strong>, <strong>{top_repos[2]}</strong> and <strong>{other_repos_count} other repositories</strong> across GitHub."
-    elif len(top_repos) == 2:
-        repos_desc = f"Contributed to <strong>{top_repos[0]}</strong> and <strong>{top_repos[1]}</strong> across GitHub."
-    elif len(top_repos) == 1:
-        repos_desc = f"Contributed to <strong>{top_repos[0]}</strong> across GitHub."
+    if len(top_target_repos) >= 3:
+        repos_desc = f"Contributed to <strong>{top_target_repos[0]}</strong>, <strong>{top_target_repos[1]}</strong>, <strong>{top_target_repos[2]}</strong> and <strong>{other_target_repos_count} other target repositories</strong>."
+    elif len(top_target_repos) == 2:
+        repos_desc = f"Contributed to <strong>{top_target_repos[0]}</strong> and <strong>{top_target_repos[1]}</strong> among target repositories."
+    elif len(top_target_repos) == 1:
+        repos_desc = f"Contributed to <strong>{top_target_repos[0]}</strong> among target repositories."
     else:
-        repos_desc = "Actively contributing to open-source repositories across GitHub."
+        repos_desc = "Actively contributing to selected target open-source repositories."
 
-    # 8. Calculate percentages for radar chart
-    total_activity = overall_commits + overall_merged_prs_count + overall_issues_count + code_reviews_count
-    if total_activity == 0:
-        total_activity = 1
+    # 8. Calculate percentages for radar chart (Target repositories only)
+    total_target_activity = target_commits + target_merged_prs_count + target_issues_count + target_reviews_count
+    if total_target_activity == 0:
+        total_target_activity = 1
         
-    p_commits = overall_commits / total_activity
-    p_prs = overall_merged_prs_count / total_activity
-    p_issues = overall_issues_count / total_activity
-    p_reviews = code_reviews_count / total_activity
+    p_commits = target_commits / total_target_activity
+    p_prs = target_merged_prs_count / total_target_activity
+    p_issues = target_issues_count / total_target_activity
+    p_reviews = target_reviews_count / total_target_activity
 
     d_max = 70
     x_center = 120
@@ -287,15 +305,15 @@ def main():
     activity_overview_card = f"""<table align="center" style="border: 1px solid #E9D5FF; border-radius: 12px; width: 100%; max-width: 800px; margin: 20px auto; background: #FAF5FF; border-collapse: separate; padding: 15px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.05);">
   <tr style="border: none; background: transparent;">
     <td style="width: 55%; vertical-align: middle; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border: none;">
-      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">Activity Overview</h3>
+      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">Target Repositories Activity Overview</h3>
       <p style="color: #6D28D9; font-size: 0.95em; line-height: 1.6;">
         {repos_desc}
       </p>
       <div style="margin-top: 20px;">
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Commits: {overall_commits}</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">PRs: {overall_merged_prs_count}</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Issues: {overall_issues_count}</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Reviews: {code_reviews_count}</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Commits: {target_commits}</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">PRs: {target_merged_prs_count}</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Issues: {target_issues_count}</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Reviews: {target_reviews_count}</span>
       </div>
     </td>
     <td align="center" style="width: 45%; vertical-align: middle; padding: 15px; border: none;">

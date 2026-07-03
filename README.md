@@ -39,7 +39,7 @@ Welcome to my GitHub profile! This page is automatically updated with my latest 
           stroke-dasharray="188.5 62.8" transform="rotate(135 60 60)" filter="url(#shadow_1)" />
   <!-- Number -->
   <text x="60" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" 
-        font-size="20" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">343</text>
+        font-size="20" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">105</text>
   <!-- Label Line 1 -->
   <text x="60" y="76" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" 
         font-size="8.5" font-weight="800" fill="#7C3AED" text-anchor="middle" letter-spacing="0.5">GLOBAL</text>
@@ -69,7 +69,7 @@ Welcome to my GitHub profile! This page is automatically updated with my latest 
           stroke-dasharray="188.5 62.8" transform="rotate(135 60 60)" filter="url(#shadow_2)" />
   <!-- Number -->
   <text x="60" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" 
-        font-size="20" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">82</text>
+        font-size="20" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">83</text>
   <!-- Label Line 1 -->
   <text x="60" y="76" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" 
         font-size="8.5" font-weight="800" fill="#7C3AED" text-anchor="middle" letter-spacing="0.5">PRs</text>
@@ -206,15 +206,15 @@ Welcome to my GitHub profile! This page is automatically updated with my latest 
 <table align="center" style="border: 1px solid #E9D5FF; border-radius: 12px; width: 100%; max-width: 800px; margin: 20px auto; background: #FAF5FF; border-collapse: separate; padding: 15px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.05);">
   <tr style="border: none; background: transparent;">
     <td style="width: 55%; vertical-align: middle; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border: none;">
-      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">Activity Overview</h3>
+      <h3 style="margin-top: 0; color: #4C1D95; font-size: 1.2em;">Target Repositories Activity Overview</h3>
       <p style="color: #6D28D9; font-size: 0.95em; line-height: 1.6;">
-        Contributed to <strong>unionai-oss/pandera</strong>, <strong>rage-rb/rage</strong>, <strong>kubeedge/website</strong> and <strong>27 other repositories</strong> across GitHub.
+        Contributed to <strong>unionai-oss/pandera</strong>, <strong>rage-rb/rage</strong>, <strong>rubocop/rubocop</strong> and <strong>19 other target repositories</strong>.
       </p>
       <div style="margin-top: 20px;">
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Commits: 343</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">PRs: 82</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Issues: 76</span>
-        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Reviews: 26</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Commits: 54</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">PRs: 68</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-right: 8px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Issues: 55</span>
+        <span style="display: inline-block; background: #F3E8FF; color: #7C3AED; font-size: 0.8em; font-weight: bold; padding: 5px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid #D8B4FE;">Reviews: 14</span>
       </div>
     </td>
     <td align="center" style="width: 45%; vertical-align: middle; padding: 15px; border: none;">
@@ -230,23 +230,23 @@ Welcome to my GitHub profile! This page is automatically updated with my latest 
   <line x1="50" y1="110" x2="190" y2="110" stroke="#C084FC" stroke-width="1.5" />
 
   <!-- Activity Polygon -->
-  <polygon points="120,106.5 130.1,110 120,120.9 74.4,110" fill="#A78BFA" fill-opacity="0.4" stroke="#7C3AED" stroke-width="2" />
+  <polygon points="120,104.9 140.2,110 120,134.9 100.2,110" fill="#A78BFA" fill-opacity="0.4" stroke="#7C3AED" stroke-width="2" />
 
   <!-- Data Points -->
-  <circle cx="120" cy="106.5" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
-  <circle cx="130.1" cy="110" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
-  <circle cx="120" cy="120.9" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
-  <circle cx="74.4" cy="110" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
+  <circle cx="120" cy="104.9" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
+  <circle cx="140.2" cy="110" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
+  <circle cx="120" cy="134.9" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
+  <circle cx="100.2" cy="110" r="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" />
 
   <!-- Labels -->
   <!-- North (Code Review) -->
-  <text x="120" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="middle">5% Code review</text>
+  <text x="120" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="middle">7% Code review</text>
   <!-- East (Issues) -->
-  <text x="196" y="113" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="start">14% Issues</text>
+  <text x="196" y="113" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="start">29% Issues</text>
   <!-- South (Pull Requests) -->
-  <text x="120" y="196" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="middle">16% Pull requests</text>
+  <text x="120" y="196" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="middle">36% Pull requests</text>
   <!-- West (Commits) -->
-  <text x="44" y="113" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="end">65% Commits</text>
+  <text x="44" y="113" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" fill="#6B21A8" text-anchor="end">28% Commits</text>
 </svg>
     </td>
   </tr>
@@ -255,4 +255,4 @@ Welcome to my GitHub profile! This page is automatically updated with my latest 
 
 
 
-*Last updated: 2026-07-03 05:19:32 UTC*
+*Last updated: 2026-07-03 05:56:08 UTC*
