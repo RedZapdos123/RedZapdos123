@@ -24,7 +24,7 @@ def run_gh_command(args):
         return []
 
 def generate_card_svg(prs_count, issues_count):
-    return f"""<svg width="450" height="200" viewBox="0 0 450 200" xmlns="http://www.w3.org/2000/svg" style="background: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    return f"""<svg width="450" height="150" viewBox="0 0 450 150" xmlns="http://www.w3.org/2000/svg" style="background: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
   <defs>
     <!-- Gradient for the rings -->
     <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -38,41 +38,39 @@ def generate_card_svg(prs_count, issues_count):
   </defs>
 
   <!-- Card Body -->
-  <rect width="450" height="200" rx="16" fill="#FAF5FF" stroke="#E9D5FF" stroke-width="1.5" />
+  <rect width="450" height="150" rx="16" fill="#FAF5FF" stroke="#E9D5FF" stroke-width="1.5" />
 
   <!-- Header -->
   <text x="25" y="34" font-size="15" font-weight="bold" fill="#4C1D95" letter-spacing="0.5">FOSS Contributions</text>
-  <!-- Embedded Live Visitor Badge -->
-  <image href="https://visitor-badge.laobi.icu/badge?page_id=RedZapdos123.RedZapdos123" x="315" y="18" width="110" height="20" />
 
   <line x1="20" y1="52" x2="430" y2="52" stroke="#E9D5FF" stroke-width="1" />
 
   <!-- Gauge 1: PRs -->
-  <g transform="translate(130, 120)">
+  <g transform="translate(130, 98)">
     <!-- Background circle (270 degree arc: dasharray="165 55" for r=35) -->
-    <circle cx="0" cy="0" r="35" stroke="#F3E8FF" stroke-width="7" stroke-linecap="round" fill="none" 
-            stroke-dasharray="164.9 55" transform="rotate(135)" />
+    <circle cx="0" cy="0" r="30" stroke="#F3E8FF" stroke-width="6.5" stroke-linecap="round" fill="none" 
+            stroke-dasharray="141.4 47.1" transform="rotate(135)" />
     <!-- Foreground circle -->
-    <circle cx="0" cy="0" r="35" stroke="url(#purpleGrad)" stroke-width="7" stroke-linecap="round" fill="none" 
-            stroke-dasharray="164.9 55" transform="rotate(135)" filter="url(#shadow)" />
+    <circle cx="0" cy="0" r="30" stroke="url(#purpleGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" 
+            stroke-dasharray="141.4 47.1" transform="rotate(135)" filter="url(#shadow)" />
     <!-- Text -->
-    <text x="0" y="-4" font-size="18" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">{prs_count}</text>
-    <text x="0" y="16" font-size="8.5" font-weight="800" fill="#7C3AED" text-anchor="middle" letter-spacing="0.5">FOSS PRs</text>
-    <text x="0" y="26" font-size="7.5" font-weight="600" fill="#A78BFA" text-anchor="middle" letter-spacing="0.5">MERGED</text>
+    <text x="0" y="-3" font-size="16" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">{prs_count}</text>
+    <text x="0" y="14" font-size="8" font-weight="800" fill="#7C3AED" text-anchor="middle" letter-spacing="0.5">FOSS PRs</text>
+    <text x="0" y="23" font-size="7" font-weight="600" fill="#A78BFA" text-anchor="middle" letter-spacing="0.5">MERGED</text>
   </g>
 
   <!-- Gauge 2: Issues -->
-  <g transform="translate(320, 120)">
+  <g transform="translate(320, 98)">
     <!-- Background circle -->
-    <circle cx="0" cy="0" r="35" stroke="#F3E8FF" stroke-width="7" stroke-linecap="round" fill="none" 
-            stroke-dasharray="164.9 55" transform="rotate(135)" />
+    <circle cx="0" cy="0" r="30" stroke="#F3E8FF" stroke-width="6.5" stroke-linecap="round" fill="none" 
+            stroke-dasharray="141.4 47.1" transform="rotate(135)" />
     <!-- Foreground circle -->
-    <circle cx="0" cy="0" r="35" stroke="url(#purpleGrad)" stroke-width="7" stroke-linecap="round" fill="none" 
-            stroke-dasharray="164.9 55" transform="rotate(135)" filter="url(#shadow)" />
+    <circle cx="0" cy="0" r="30" stroke="url(#purpleGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" 
+            stroke-dasharray="141.4 47.1" transform="rotate(135)" filter="url(#shadow)" />
     <!-- Text -->
-    <text x="0" y="-4" font-size="18" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">{issues_count}</text>
-    <text x="0" y="16" font-size="8.5" font-weight="800" fill="#7C3AED" text-anchor="middle" letter-spacing="0.5">FOSS ISSUES</text>
-    <text x="0" y="26" font-size="7.5" font-weight="600" fill="#A78BFA" text-anchor="middle" letter-spacing="0.5">AUTHORED</text>
+    <text x="0" y="-3" font-size="16" font-weight="bold" fill="#4C1D95" text-anchor="middle" dominant-baseline="middle">{issues_count}</text>
+    <text x="0" y="14" font-size="8" font-weight="800" fill="#7C3AED" text-anchor="middle" letter-spacing="0.5">FOSS ISSUES</text>
+    <text x="0" y="23" font-size="7" font-weight="600" fill="#A78BFA" text-anchor="middle" letter-spacing="0.5">AUTHORED</text>
   </g>
 </svg>"""
 
@@ -120,13 +118,20 @@ def main():
     
     foss_issues_count = len(open_issues) + len(closed_issues)
 
-    # Generate output
+    # Save SVG card to file
+    card_svg = generate_card_svg(foss_prs_count, foss_issues_count)
+    with open("profile-summary.svg", "w", encoding="utf-8") as f:
+        f.write(card_svg)
+    print("profile-summary.svg successfully saved!")
+
+    # Generate README.md referencing the SVG file
     report = []
     report.append('<div align="center">')
-    report.append(generate_card_svg(foss_prs_count, foss_issues_count))
+    report.append(f'  <img src="https://visitor-badge.laobi.icu/badge?page_id={user}.{user}" alt="Visitor Count" />')
+    report.append('  <br/><br/>')
+    report.append('  <img src="profile-summary.svg" alt="FOSS Contributions" />')
     report.append('</div>')
 
-    # Write output to README.md
     with open("README.md", "w", encoding="utf-8") as f:
         f.write("\n".join(report))
     print("README.md successfully updated!")
