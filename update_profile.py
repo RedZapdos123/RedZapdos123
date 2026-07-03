@@ -103,7 +103,7 @@ def generate_badge_svg(number, label_line1, label_line2):
 
 def main():
     user = "RedZapdos123"
-    exclude_users = ["RedZapdos123", "WhiteMetagross", "Digvijay-x1", "swarupn17"]
+    exclude_users = ["RedZapdos123", "WhiteMetagross", "Digvijay-x1", "swarupn17", "Paraspandey-debugs", "yenode", "RajanPatil1904", "LevelSilence"]
     
     report = []
     report.append(f"# Hi there, I'm @{user}\n")
