@@ -119,7 +119,7 @@ def generate_card_svg(prs_count, issues_count):
 
 def main():
     user = "RedZapdos123"
-    exclude_users = ["RedZapdos123", "WhiteMetagross", "Digvijay-x1", "swarupn17", "Paraspandey-debugs", "yenode", "RajanPatil1904", "LevelSilence"]
+    exclude_users = ["RedZapdos123", "WhiteMetagross", "Digvijay-x1", "swarupn17", "Paraspandey-debugs", "yenode", "RajanPatil1904", "LevelSilence", "BlackRaichu"]
     
     # Exclude self-owned, co-owned, or specified accounts
     def is_excluded(item):
