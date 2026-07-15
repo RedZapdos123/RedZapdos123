@@ -142,7 +142,7 @@ def get_existing_counts():
 
 def main():
     user = "RedZapdos123"
-    exclude_users = ["RedZapdos123", "WhiteMetagross", "Digvijay-x1", "swarupn17", "Paraspandey-debugs", "yenode", "RajanPatil1904", "LevelSilence", "BlackRaichu"]
+    exclude_users = ["RedZapdos123", "WhiteMetagross", "Digvijay-x1", "swarupn17", "Paraspandey-debugs", "yenode", "RajanPatil1904", "LevelSilence", "BlackRaichu", "sknrao"]
     
     # Exclude self-owned, co-owned, or specified accounts
     def is_excluded(item):
