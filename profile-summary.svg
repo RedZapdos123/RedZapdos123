@@ -68,7 +68,7 @@
     <circle cx="0" cy="0" r="55" stroke="url(#purpleGrad)" stroke-width="10" stroke-linecap="round" fill="none" 
             stroke-dasharray="259.2 86.4" transform="rotate(135)" filter="url(#shadowPurple)" />
     <!-- Centered Number -->
-    <text x="0" y="-8" font-size="26" font-weight="bold" class="prs-num" text-anchor="middle" dominant-baseline="middle">92</text>
+    <text x="0" y="-8" font-size="26" font-weight="bold" class="prs-num" text-anchor="middle" dominant-baseline="middle">93</text>
     <!-- Labels inside circle with optimized vertical space -->
     <text x="0" y="20" font-size="11.5" font-weight="800" class="prs-lbl1" text-anchor="middle">FOSS PRs</text>
     <text x="0" y="32" font-size="10" font-weight="600" class="prs-lbl2" text-anchor="middle">MERGED</text>
@@ -83,7 +83,7 @@
     <circle cx="0" cy="0" r="55" stroke="url(#greenGrad)" stroke-width="10" stroke-linecap="round" fill="none" 
             stroke-dasharray="259.2 86.4" transform="rotate(135)" filter="url(#shadowGreen)" />
     <!-- Centered Number -->
-    <text x="0" y="-8" font-size="26" font-weight="bold" class="iss-num" text-anchor="middle" dominant-baseline="middle">82</text>
+    <text x="0" y="-8" font-size="26" font-weight="bold" class="iss-num" text-anchor="middle" dominant-baseline="middle">84</text>
     <!-- Labels inside circle with optimized vertical space -->
     <text x="0" y="20" font-size="11.5" font-weight="800" class="iss-lbl1" text-anchor="middle">FOSS ISSUES</text>
     <text x="0" y="32" font-size="10" font-weight="600" class="iss-lbl2" text-anchor="middle">AUTHORED</text>
